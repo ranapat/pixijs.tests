@@ -2,6 +2,7 @@ import CommandNames from './command-names';
 
 const SINGLE_COMMANDS = [
   CommandNames.MOVE,
+  CommandNames.SHIFT,
   CommandNames.TURN,
 ];
 

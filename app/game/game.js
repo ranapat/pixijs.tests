@@ -1,7 +1,9 @@
 import Config from '../config/config';
 
 import CommandStack from './commands/command-stack';
+
 import ControllerMouse from './controllers/controller-mouse';
+import ControllerKeyboard from './controllers/controller-keyboard';
 
 import Painter from './painters/painter';
 
@@ -17,12 +19,14 @@ export default class Game {
 
     this.stack = new CommandStack();
     this.mouse = new ControllerMouse(this.stack, this.canvas);
+    this.keyboard = new ControllerKeyboard(this.stack, window);
     this.painter = new Painter(this.context);
     this.scene = new SceneOne(this.stack, this.painter);
 
     this.nextGameTick = Date.now();
 
     this.mouse.start();
+    this.keyboard.start();
   }
 
   update() {

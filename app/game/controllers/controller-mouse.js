@@ -32,7 +32,9 @@ export default class ControllerMouse extends Controller {
 
   handleMouseDown(e) {
     if (this.started) {
-      this.emit(CommandNames.MOVE, ActorNames.HERO, this.getPoint(e));
+      if (e.button > 0) {
+        this.emit(CommandNames.MOVE, ActorNames.HERO, this.getPoint(e));
+      }
     }
   }
 
@@ -44,13 +46,4 @@ export default class ControllerMouse extends Controller {
     this.canvas.addEventListener('mousemove', this.handleMouseMove, false);
     this.canvas.addEventListener('mousedown', this.handleMouseDown, false);
   }
-
-  start() {
-    this.started = true;
-  }
-
-  stop() {
-    this.started = false;
-  }
-
 }

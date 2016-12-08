@@ -41,8 +41,16 @@ export default class Initialize {
     this.context.height = Config.height;
   }
 
+  preventContextMenu() {
+    this.canvas.addEventListener('contextmenu', this.handleOnContextMenu, false);
+  }
+
   cleanContext() {
     this.context.fillRect(0, 0, this.context.width, this.context.height);
+  }
+
+  handleOnContextMenu(e) {
+    e.preventDefault();
   }
 
   generate() {
@@ -50,6 +58,7 @@ export default class Initialize {
 
     if (success === true) {
       this.adjustSize();
+      this.preventContextMenu();
       this.cleanContext();
     }
 

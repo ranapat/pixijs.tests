@@ -35,6 +35,13 @@ export default class SceneOne extends Scene {
         if (item.actor === hero.name) {
           if (item.action === ActionNames.MOVE) {
             Keeper.add(new Linear(hero, item.to, hero.step, this.handleUpdateHeroMove));
+          } else if (item.action === ActionNames.SHIFT) {
+            Keeper.add(new Linear(
+              hero,
+              { x: hero.position.x + item.to.x, y: hero.position.y + item.to.y },
+              hero.step,
+              this.handleUpdateHeroMove
+            ));
           } else if (item.action === ActionNames.TURN) {
             hero.apply(hero.x, hero.y, Tools.angleBetweenPoints(hero.position, item.to));
           }
