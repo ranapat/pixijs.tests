@@ -27,7 +27,7 @@ export default class Scene {
         item = actors[i];
 
         if (item.ready) {
-          this.context.draw(item.image, item.x, item.y, item.rotation);
+          this.context.draw(item.image, item.x, item.y, item.angle);
         }
       }
     }

@@ -5,6 +5,9 @@ import ActionNames from '../commands/command-names';
 
 import Hero from '../actors/actor-hero';
 
+import Keeper from '../easing/keeper';
+import Linear from '../easing/linear';
+
 export default class SceneOne extends Scene {
   constructor(stack, context) {
     super(stack, context);
@@ -12,6 +15,12 @@ export default class SceneOne extends Scene {
     this.hero = new Hero();
     this.hero.apply(this.context.width / 2, this.context.height / 2, 90);
     this.actors.push(this.hero);
+
+    this.handleUpdateHeroMove = this.handleUpdateHeroMove.bind(this);
+  }
+
+  handleUpdateHeroMove(position) {
+    this.hero.apply(position.x, position.y);
   }
 
   update() {
@@ -25,13 +34,14 @@ export default class SceneOne extends Scene {
       if (item !== undefined) {
         if (item.actor === hero.name) {
           if (item.action === ActionNames.MOVE) {
-            console.log(hero.rotation);
-            hero.apply(item.to.x, item.to.y);
+            Keeper.add(new Linear(hero, item.to, hero.step, this.handleUpdateHeroMove));
           } else if (item.action === ActionNames.TURN) {
             hero.apply(hero.x, hero.y, Tools.angleBetweenPoints(hero.position, item.to));
           }
         }
       }
     } while (item !== undefined);
+
+    Keeper.walk();
   }
 }

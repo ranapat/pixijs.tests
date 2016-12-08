@@ -12,6 +12,10 @@ export default class Actor {
     this.rotation = undefined;
   }
 
+  get angle() {
+    return this.rotation;
+  }
+
   get position() {
     return { x: this.x, y: this.y };
   }

@@ -1,6 +1,10 @@
 import Actor from './actor';
 import ActorNames from './actor-names';
 
+import Config from '../../config/config';
+
+const step = Config.heroStep;
+
 export default class ActorHero extends Actor {
   constructor() {
     super(ActorNames.HERO);
@@ -13,7 +17,7 @@ export default class ActorHero extends Actor {
     this.image = new Image();
     this.image.onload = this.handleOnLoad;
     this.image.onerror = this.handleOnError;
-    this.image.src = '../../../shared/images/actors/hero.jpg';
+    this.image.src = '../../../shared/images/actors/hero.png';
   }
 
   handleOnLoad() {
@@ -34,7 +38,15 @@ export default class ActorHero extends Actor {
     }
 
     if (rotation !== undefined) {
-      this.rotation = rotation + 100;
+      this.rotation = rotation;
     }
+  }
+
+  get angle() {
+    return this.rotation + 80;
+  }
+
+  get step() {
+    return step;
   }
 }
