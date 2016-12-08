@@ -13,7 +13,7 @@ export default class ActorHero extends Actor {
     this.image = new Image();
     this.image.onload = this.handleOnLoad;
     this.image.onerror = this.handleOnError;
-    this.image.src = '../../../shared/images/actors/hero.png';
+    this.image.src = '../../../shared/images/actors/hero.jpg';
   }
 
   handleOnLoad() {
@@ -24,7 +24,17 @@ export default class ActorHero extends Actor {
     console.log('Hero asset cannot be loaded.');
   }
 
-  apply(position) {
-    console.log(position);
+  apply(x, y, rotation) {
+    if (x !== undefined) {
+      this.x = x;
+    }
+
+    if (y !== undefined) {
+      this.y = y;
+    }
+
+    if (rotation !== undefined) {
+      this.rotation = rotation + 100;
+    }
   }
 }

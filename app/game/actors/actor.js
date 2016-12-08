@@ -9,10 +9,14 @@ export default class Actor {
     this.ready = false;
     this.x = undefined;
     this.y = undefined;
+    this.rotation = undefined;
   }
 
-  set(position) {
-    this.x = position.x;
-    this.y = position.y;
+  get position() {
+    return { x: this.x, y: this.y };
+  }
+
+  apply(...args) {
+    console.log(...args);
   }
 }
