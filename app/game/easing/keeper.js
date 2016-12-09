@@ -9,14 +9,15 @@ export default class Keeper {
 
     for (i = 0; i < length; i += 1) {
       item = queue[i];
-      if (item.target === ease.target) {
+
+      if (ease.preferAlone(item)) {
         queue.splice(i, 1);
 
         break;
       }
     }
 
-    Keeper.queue.push(ease);
+    queue.push(ease);
   }
 
   static walk() {

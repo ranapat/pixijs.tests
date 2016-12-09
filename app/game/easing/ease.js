@@ -16,6 +16,12 @@ export default class Ease {
     return true;
   }
 
+  preferAlone(ease) {
+    return this.constructor.name === ease.constructor.name
+        && this.target === ease.target
+    ;
+  }
+
   poke() {
     this.callback(this.next);
   }

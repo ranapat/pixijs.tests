@@ -7,6 +7,7 @@ import Hero from '../actors/actor-hero';
 
 import Keeper from '../easing/keeper';
 import Linear from '../easing/linear';
+import LinearSumable from '../easing/linear-sumable';
 
 export default class SceneOne extends Scene {
   constructor(stack, context) {
@@ -28,6 +29,8 @@ export default class SceneOne extends Scene {
     const stack = this.stack;
     let item;
 
+    const linearSumableTo = { x: 0, y: 0 };
+
     do {
       item = stack.get();
 
@@ -36,18 +39,23 @@ export default class SceneOne extends Scene {
           if (item.action === ActionNames.MOVE) {
             Keeper.add(new Linear(hero, item.to, hero.step, this.handleUpdateHeroMove));
           } else if (item.action === ActionNames.SHIFT) {
-            Keeper.add(new Linear(
-              hero,
-              { x: hero.position.x + item.to.x, y: hero.position.y + item.to.y },
-              hero.step,
-              this.handleUpdateHeroMove
-            ));
+            linearSumableTo.x += item.to.x;
+            linearSumableTo.y += item.to.y;
           } else if (item.action === ActionNames.TURN) {
             hero.apply(hero.x, hero.y, Tools.angleBetweenPoints(hero.position, item.to));
           }
         }
       }
     } while (item !== undefined);
+
+    if (linearSumableTo.x !== 0 || linearSumableTo.y !== 0) {
+      Keeper.add(new LinearSumable(
+        hero,
+        { x: hero.position.x + linearSumableTo.x, y: hero.position.y + linearSumableTo.y },
+        hero.step,
+        this.handleUpdateHeroMove
+      ));
+    }
 
     stack.rest();
 

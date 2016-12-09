@@ -65,8 +65,6 @@ export default class CommandStack {
     const length = queue.length;
     for (i = 0; i < length; i += 1) {
       item = queue[i];
-      console.log(item.to);
-      console.log(command.to);
 
       if (item.action === CommandNames.SHIFT && item.isToExact(command)) {
         queue.splice(i, 1);
@@ -92,8 +90,6 @@ export default class CommandStack {
     if (!this.tryExceptionalCommand(command)) {
       this.tryToPushCommand(command);
     }
-
-    console.log(this.queue.length);
   }
 
   get() {
