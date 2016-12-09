@@ -23,49 +23,42 @@ export default class ControllerKeyboard extends Controller {
     this.initializeEvents();
   }
 
-  getShift() {
-    let x = 0;
-    let y = 0;
-
-    if (this.shiftLeft) {
-      x = -offset;
-    } else if (this.shiftRight) {
-      x = offset;
+  getShift(keyCode) {
+    switch (keyCode) {
+      case Config.keyboardShiftUp: return { x: 0, y: -offset };
+      case Config.keyboardShiftDown: return { x: 0, y: offset };
+      case Config.keyboardShiftLeft: return { x: -offset, y: 0 };
+      case Config.keyboardShiftRight: return { x: offset, y: 0 };
+      default: return undefined;
     }
-
-    if (this.shiftUp) {
-      y = -offset;
-    } else if (this.shiftDown) {
-      y = offset;
-    }
-
-    return (x !== 0 || y !== 0) ? { x, y } : undefined;
   }
 
   setShiftState(keyCode, state) {
+    let changed = false;
+
     switch (keyCode) {
-      case Config.keyboardShiftUp: this.shiftUp = state; break;
-      case Config.keyboardShiftDown: this.shiftDown = state; break;
-      case Config.keyboardShiftLeft: this.shiftLeft = state; break;
-      case Config.keyboardShiftRight: this.shiftRight = state; break;
+      case Config.keyboardShiftUp: changed = this.shiftUp !== state; this.shiftUp = state; break;
+      case Config.keyboardShiftDown: changed = this.shiftDown !== state; this.shiftDown = state; break;
+      case Config.keyboardShiftLeft: changed = this.shiftLeft !== state; this.shiftLeft = state; break;
+      case Config.keyboardShiftRight: changed = this.shiftRight !== state; this.shiftRight = state; break;
       default: /**/
     }
+
+    return changed;
   }
 
   handleKeyUp(e) {
-    console.log(`up ${e.keyCode}`);
     if (this.started) {
-      this.setShiftState(e.keyCode, false);
+      if (this.setShiftState(e.keyCode, false)) {
+        this.emit(CommandNames.UNSHIFT, ActorNames.HERO, this.getShift(e.keyCode));
+      }
     }
   }
 
   handleKeyDown(e) {
-    console.log(`down ${e.keyCode}`);
     if (this.started) {
-      this.setShiftState(e.keyCode, true);
-      const shift = this.getShift();
-      if (shift !== undefined) {
-        this.emit(CommandNames.SHIFT, ActorNames.HERO, shift);
+      if (this.setShiftState(e.keyCode, true)) {
+        this.emit(CommandNames.SHIFT, ActorNames.HERO, this.getShift(e.keyCode));
       }
     }
   }

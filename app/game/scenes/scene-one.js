@@ -49,6 +49,8 @@ export default class SceneOne extends Scene {
       }
     } while (item !== undefined);
 
+    stack.rest();
+
     Keeper.walk();
   }
 }

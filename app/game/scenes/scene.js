@@ -18,14 +18,10 @@ export default class Scene {
     if (interpolation === 1) {
       this.context.clear();
 
-      let i;
-      const actors = this.actors;
-      const length = actors.length;
       let item;
+      const actors = this.actors;
 
-      for (i = 0; i < length; i += 1) {
-        item = actors[i];
-
+      for (item of actors) {
         if (item.ready) {
           this.context.draw(item.image, item.x, item.y, item.angle);
         }
