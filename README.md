@@ -1,3 +1,6 @@
+#### `npm run open-dev`
+The same as npm run dev, but opens the browser
+
 #### `npm run dev`
 Run the development environment, it has a watcher and will refresh the page when the code changes.
 
