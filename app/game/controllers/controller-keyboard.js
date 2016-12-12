@@ -59,7 +59,7 @@ export default class ControllerKeyboard extends Controller {
       if (e.keyCode === Config.keyboardSteer && this.steerModifier) {
         this.steerModifier = false;
 
-        this.unmodify(CommandModifiers.STEER);
+        this.unmodify(CommandModifiers.FOLLOW);
       }
     }
   }
@@ -73,7 +73,7 @@ export default class ControllerKeyboard extends Controller {
       if (e.keyCode === Config.keyboardSteer && !this.steerModifier) {
         this.steerModifier = true;
 
-        this.modify(CommandModifiers.STEER);
+        this.modify(CommandModifiers.FOLLOW);
       }
     }
   }

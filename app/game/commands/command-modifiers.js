@@ -1,3 +1,3 @@
 export default class CommandModifiers {
-  static get STEER() { return 'steer'; }
+  static get FOLLOW() { return 'follow'; }
 }

@@ -1,4 +1,5 @@
 const TO_DEGREES = 180 / Math.PI;
+const TO_RADIANS = Math.PI / 180;
 
 export default class Tools {
   static angleBetweenPoints(a, b) {
@@ -20,5 +21,12 @@ export default class Tools {
     }
 
     return result;
+  }
+
+  static offsetWithStep(initial, angle, step) {
+    const x = (Math.cos(angle * TO_RADIANS) * step) + initial.x;
+    const y = (Math.sin(angle * TO_RADIANS) * step) + initial.y;
+
+    return { x, y };
   }
 }
