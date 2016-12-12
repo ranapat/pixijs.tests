@@ -11,7 +11,9 @@ export default class Scene {
   }
 
   update() {
-    return undefined;
+    const stack = this.stack;
+
+    stack.rest();
   }
 
   draw(interpolation) {

@@ -2,6 +2,7 @@ import Scene from './scene';
 
 import Tools from '../easing/tools';
 import ActionNames from '../commands/command-names';
+import CommandModifiers from '../commands/command-modifiers';
 
 import Hero from '../actors/actor-hero';
 
@@ -41,6 +42,8 @@ export default class SceneOne extends Scene {
           } else if (item.action === ActionNames.SHIFT) {
             linearSumableTo.x += item.to.x;
             linearSumableTo.y += item.to.y;
+
+            console.log(`.............. ${stack.isModified(CommandModifiers.STEER)}`);
           } else if (item.action === ActionNames.TURN) {
             hero.apply(hero.x, hero.y, Tools.angleBetweenPoints(hero.position, item.to));
           }
@@ -57,8 +60,8 @@ export default class SceneOne extends Scene {
       ));
     }
 
-    stack.rest();
-
     Keeper.walk();
+
+    super.update();
   }
 }

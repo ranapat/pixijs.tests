@@ -21,4 +21,12 @@ export default class Controller {
   emit(name, ...args) {
     this.stack.add(CommandFactory.get(name, ...args));
   }
+
+  modify(modifier) {
+    this.stack.modify(modifier);
+  }
+
+  unmodify(modifier) {
+    this.stack.unmodify(modifier);
+  }
 }

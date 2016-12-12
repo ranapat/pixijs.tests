@@ -2,6 +2,7 @@ import Controller from './controller';
 
 import Config from '../../config/config';
 import CommandNames from '../commands/command-names';
+import CommandModifiers from '../commands/command-modifiers';
 import ActorNames from '../actors/actor-names';
 
 const offset = Config.heroStep * 10;
@@ -16,6 +17,8 @@ export default class ControllerKeyboard extends Controller {
     this.shiftRight = false;
     this.shiftUp = false;
     this.shiftDown = false;
+
+    this.steerModifier = false;
 
     this.handleKeyUp = this.handleKeyUp.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
@@ -52,6 +55,12 @@ export default class ControllerKeyboard extends Controller {
       if (this.setShiftState(e.keyCode, false)) {
         this.emit(CommandNames.UNSHIFT, ActorNames.HERO, this.getShift(e.keyCode));
       }
+
+      if (e.keyCode === Config.keyboardSteer && this.steerModifier) {
+        this.steerModifier = false;
+
+        this.unmodify(CommandModifiers.STEER);
+      }
     }
   }
 
@@ -59,6 +68,12 @@ export default class ControllerKeyboard extends Controller {
     if (this.started) {
       if (this.setShiftState(e.keyCode, true)) {
         this.emit(CommandNames.SHIFT, ActorNames.HERO, this.getShift(e.keyCode));
+      }
+
+      if (e.keyCode === Config.keyboardSteer && !this.steerModifier) {
+        this.steerModifier = true;
+
+        this.modify(CommandModifiers.STEER);
       }
     }
   }

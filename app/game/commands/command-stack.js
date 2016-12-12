@@ -14,6 +14,7 @@ const APPLY_BACK_COMMANDS = [
 export default class CommandStack {
   constructor() {
     this.queue = [];
+    this.modifiers = [];
 
     this.reapply = [];
   }
@@ -84,6 +85,35 @@ export default class CommandStack {
     }
 
     return handled;
+  }
+
+  modify(modifier) {
+    let located = false;
+    let i;
+    const modifiers = this.modifiers;
+    const length = modifiers.length;
+
+    for (i = 0; i < length && !located; i += 2) {
+      if (modifiers[i] === modifier) {
+        located = true;
+      }
+    }
+
+    if (!located) {
+      modifiers.push(modifier);
+    }
+  }
+
+  unmodify(modifier) {
+    const modifiers = this.modifiers;
+    const index = modifiers.indexOf(modifier);
+    if (index !== -1) {
+      modifiers.splice(index, 1);
+    }
+  }
+
+  isModified(modifier) {
+    return this.modifiers.indexOf(modifier) !== -1;
   }
 
   add(command) {
