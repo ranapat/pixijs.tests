@@ -12,11 +12,11 @@ import Linear from '../easing/linear';
 import LinearSumable from '../easing/linear-sumable';
 import Simple from '../easing/simple';
 
-import Config from '../../config/config';
+import ConfigDestination from '../../config/config-destination';
 
 const TARGET_CIRCLE = 'circle';
-const CIRCLE_RADIUS = Config.circleRadius;
-const CIRCLE_RADIUS_STEP = Config.circleRadiusStep;
+const CIRCLE_RADIUS = ConfigDestination.circleRadius;
+const CIRCLE_RADIUS_STEP = ConfigDestination.circleRadiusStep;
 
 export default class SceneOne extends Scene {
   constructor(stack, context) {

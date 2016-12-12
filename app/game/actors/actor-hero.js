@@ -1,9 +1,9 @@
 import Actor from './actor';
 import ActorNames from './actor-names';
 
-import Config from '../../config/config';
+import ConfigHero from '../../config/config-hero';
 
-const step = Config.heroStep;
+const step = ConfigHero.heroStep;
 
 export default class ActorHero extends Actor {
   constructor() {

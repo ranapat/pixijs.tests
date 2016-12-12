@@ -1,11 +1,13 @@
 import Controller from './controller';
 
-import Config from '../../config/config';
+import ConfigHero from '../../config/config-hero';
+import ConfigKeyboard from '../../config/config-keyboard';
+
 import CommandNames from '../commands/command-names';
 import CommandModifiers from '../commands/command-modifiers';
 import ActorNames from '../actors/actor-names';
 
-const offset = Config.heroStep * 10;
+const offset = ConfigHero.heroStep * 10;
 
 export default class ControllerKeyboard extends Controller {
   constructor(stack, window) {
@@ -28,10 +30,10 @@ export default class ControllerKeyboard extends Controller {
 
   getShift(keyCode) {
     switch (keyCode) {
-      case Config.keyboardShiftUp: return { x: 0, y: -offset };
-      case Config.keyboardShiftDown: return { x: 0, y: offset };
-      case Config.keyboardShiftLeft: return { x: -offset, y: 0 };
-      case Config.keyboardShiftRight: return { x: offset, y: 0 };
+      case ConfigKeyboard.keyboardShiftUp: return { x: 0, y: -offset };
+      case ConfigKeyboard.keyboardShiftDown: return { x: 0, y: offset };
+      case ConfigKeyboard.keyboardShiftLeft: return { x: -offset, y: 0 };
+      case ConfigKeyboard.keyboardShiftRight: return { x: offset, y: 0 };
       default: return undefined;
     }
   }
@@ -40,10 +42,10 @@ export default class ControllerKeyboard extends Controller {
     let changed = false;
 
     switch (keyCode) {
-      case Config.keyboardShiftUp: changed = this.shiftUp !== state; this.shiftUp = state; break;
-      case Config.keyboardShiftDown: changed = this.shiftDown !== state; this.shiftDown = state; break;
-      case Config.keyboardShiftLeft: changed = this.shiftLeft !== state; this.shiftLeft = state; break;
-      case Config.keyboardShiftRight: changed = this.shiftRight !== state; this.shiftRight = state; break;
+      case ConfigKeyboard.keyboardShiftUp: changed = this.shiftUp !== state; this.shiftUp = state; break;
+      case ConfigKeyboard.keyboardShiftDown: changed = this.shiftDown !== state; this.shiftDown = state; break;
+      case ConfigKeyboard.keyboardShiftLeft: changed = this.shiftLeft !== state; this.shiftLeft = state; break;
+      case ConfigKeyboard.keyboardShiftRight: changed = this.shiftRight !== state; this.shiftRight = state; break;
       default: /**/
     }
 
@@ -56,7 +58,7 @@ export default class ControllerKeyboard extends Controller {
         this.emit(CommandNames.UNSHIFT, ActorNames.HERO, this.getShift(e.keyCode));
       }
 
-      if (e.keyCode === Config.keyboardSteer && this.steerModifier) {
+      if (e.keyCode === ConfigKeyboard.keyboardSteer && this.steerModifier) {
         this.steerModifier = false;
 
         this.unmodify(CommandModifiers.FOLLOW);
@@ -70,7 +72,7 @@ export default class ControllerKeyboard extends Controller {
         this.emit(CommandNames.SHIFT, ActorNames.HERO, this.getShift(e.keyCode));
       }
 
-      if (e.keyCode === Config.keyboardSteer && !this.steerModifier) {
+      if (e.keyCode === ConfigKeyboard.keyboardSteer && !this.steerModifier) {
         this.steerModifier = true;
 
         this.modify(CommandModifiers.FOLLOW);
