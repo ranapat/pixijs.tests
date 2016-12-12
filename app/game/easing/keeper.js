@@ -36,7 +36,6 @@ export default class Keeper {
         || ease.executeIn === Ease.EXECUTE_IN_BOTH
         || executeIn === ease.executeIn
       ) {
-        console.log(`${executeIn} ... ${ease.target} .. ${ease.executeIn}`);
         if (!ease.ready) {
           ease.poke();
         } else {
