@@ -18,6 +18,8 @@ export default class SceneOne extends Scene {
     this.hero.apply(this.context.width / 2, this.context.height / 2, 90);
     this.actors.push(this.hero);
 
+    this.mouse = undefined;
+
     this.handleUpdateHeroMove = this.handleUpdateHeroMove.bind(this);
   }
 
@@ -57,6 +59,8 @@ export default class SceneOne extends Scene {
             }
           } else if (item.action === ActionNames.TURN) {
             hero.apply(hero.x, hero.y, Tools.angleBetweenPoints(hero.position, item.to));
+
+            this.mouse = { x: item.to.x, y: item.to.y };
           }
         }
       }
@@ -74,5 +78,26 @@ export default class SceneOne extends Scene {
     Keeper.walk();
 
     super.update();
+  }
+
+  draw(interpolation) {
+    super.draw(interpolation);
+
+    const hero = this.hero;
+    const position = hero.position;
+    const mouse = this.mouse;
+
+    if (interpolation === 1 && mouse !== undefined) {
+      this.context.tracer(
+        Tools.sumPoints(
+          Tools.rotatePoint(
+            hero.gunTip,
+            hero.angle
+          ),
+          position
+        ),
+        mouse
+      );
+    }
   }
 }

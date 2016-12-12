@@ -6,6 +6,20 @@ export default class Tools {
     return Math.atan2(b.y - a.y, b.x - a.x) * TO_DEGREES;
   }
 
+  static rotatePoint(point, angle) {
+    const sin = Math.sin(angle * TO_RADIANS);
+    const cos = Math.cos(angle * TO_RADIANS);
+
+    const x = (point.x * cos) - (point.y * sin);
+    const y = (point.y * cos) + (point.x * sin);
+
+    return { x, y };
+  }
+
+  static sumPoints(a, b) {
+    return { x: a.x + b.x, y: a.y + b.y };
+  }
+
   static shiftWithStep(initial, destination, step) {
     let result;
 

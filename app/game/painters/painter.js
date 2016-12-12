@@ -26,4 +26,22 @@ export default class Painter {
   clear() {
     this.context.clearRect(0, 0, this.width, this.height);
   }
+
+  tracer(from, to) {
+    const context = this.context;
+
+    const gradient = context.createLinearGradient(from.x, from.y, to.x, to.y);
+    gradient.addColorStop(0, 'rgba(255, 0, 0, 1.0)');
+    gradient.addColorStop(1, 'rgba(255, 0, 0, 0.1)');
+
+    context.beginPath();
+
+    context.moveTo(from.x, from.y);
+    context.lineTo(to.x, to.y);
+
+    context.lineWidth = 1;
+    context.strokeStyle = gradient;
+
+    context.stroke();
+  }
 }

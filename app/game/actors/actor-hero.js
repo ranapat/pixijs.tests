@@ -49,4 +49,8 @@ export default class ActorHero extends Actor {
   get step() {
     return step;
   }
+
+  get gunTip() {
+    return { x: 15, y: -42 };
+  }
 }
