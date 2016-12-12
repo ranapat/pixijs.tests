@@ -1,4 +1,8 @@
 export default class Ease {
+  static get EXECUTE_IN_BOTH() { return 'both'; }
+  static get EXECUTE_IN_UPDATE() { return 'update'; }
+  static get EXECUTE_IN_DRAW() { return 'draw'; }
+
   constructor(target, callback) {
     if (new.target === Ease) {
       throw new TypeError('Cannot construct Ease directly');
@@ -6,6 +10,8 @@ export default class Ease {
 
     this.target = target;
     this.callback = callback;
+
+    this.executeIn = Ease.EXECUTE_IN_BOTH;
   }
 
   get next() {

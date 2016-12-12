@@ -1,3 +1,5 @@
+import Ease from './ease';
+
 export default class Keeper {
   static queue = [];
 
@@ -18,22 +20,30 @@ export default class Keeper {
     }
 
     queue.push(ease);
+
+    return ease;
   }
 
-  static walk() {
+  static walk(executeIn) {
     let ease;
     const queue = Keeper.queue;
     let i;
 
     for (i = 0; i < queue.length; i += 1) {
       ease = queue[i];
+      if (
+        executeIn === undefined
+        || ease.executeIn === Ease.EXECUTE_IN_BOTH
+        || executeIn === ease.executeIn
+      ) {
+        console.log(`${executeIn} ... ${ease.target} .. ${ease.executeIn}`);
+        if (!ease.ready) {
+          ease.poke();
+        } else {
+          queue.splice(i, 1);
 
-      if (!ease.ready) {
-        ease.poke();
-      } else {
-        queue.splice(i, 1);
-
-        i -= 1;
+          i -= 1;
+        }
       }
     }
   }

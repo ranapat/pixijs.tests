@@ -32,7 +32,7 @@ export default class Painter {
 
     const gradient = context.createLinearGradient(from.x, from.y, to.x, to.y);
     gradient.addColorStop(0, 'rgba(255, 0, 0, 1.0)');
-    gradient.addColorStop(1, 'rgba(255, 0, 0, 0.1)');
+    gradient.addColorStop(1, 'rgba(255, 0, 0, 0.0)');
 
     context.beginPath();
 
@@ -41,6 +41,20 @@ export default class Painter {
 
     context.lineWidth = 1;
     context.strokeStyle = gradient;
+
+    context.stroke();
+  }
+
+  destination(position, radius) {
+    const context = this.context;
+
+    context.beginPath();
+
+    context.arc(position.x, position.y, radius, 0, 2 * Math.PI, false);
+    context.fillStyle = 'rgba(255, 0, 0, 0.2)';
+    context.fill();
+    context.lineWidth = 1;
+    context.strokeStyle = 'rgba(255, 0, 0, 1.0)';
 
     context.stroke();
   }

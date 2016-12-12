@@ -6,9 +6,17 @@ import CommandModifiers from '../commands/command-modifiers';
 
 import Hero from '../actors/actor-hero';
 
+import Ease from '../easing/ease';
 import Keeper from '../easing/keeper';
 import Linear from '../easing/linear';
 import LinearSumable from '../easing/linear-sumable';
+import Simple from '../easing/simple';
+
+import Config from '../../config/config';
+
+const TARGET_CIRCLE = 'circle';
+const CIRCLE_RADIUS = Config.circleRadius;
+const CIRCLE_RADIUS_STEP = Config.circleRadiusStep;
 
 export default class SceneOne extends Scene {
   constructor(stack, context) {
@@ -19,12 +27,20 @@ export default class SceneOne extends Scene {
     this.actors.push(this.hero);
 
     this.mouse = undefined;
+    this.destination = undefined;
 
     this.handleUpdateHeroMove = this.handleUpdateHeroMove.bind(this);
+    this.handleUpdateCircle = this.handleUpdateCircle.bind(this);
   }
 
   handleUpdateHeroMove(position) {
     this.hero.apply(position.x, position.y);
+  }
+
+  handleUpdateCircle(radius) {
+    if (this.destination !== undefined) {
+      this.context.destination(this.destination, radius);
+    }
   }
 
   update() {
@@ -42,7 +58,14 @@ export default class SceneOne extends Scene {
       if (item !== undefined) {
         if (item.actor === hero.name) {
           if (item.action === ActionNames.MOVE) {
-            Keeper.add(new Linear(hero, item.to, hero.step, this.handleUpdateHeroMove));
+            Keeper.add(
+              new Linear(hero, item.to, hero.step, this.handleUpdateHeroMove)
+            ).executeIn = Ease.EXECUTE_IN_UPDATE;
+
+            this.destination = { x: item.to.x, y: item.to.y };
+            Keeper.add(
+              new Simple(TARGET_CIRCLE, CIRCLE_RADIUS, 0, CIRCLE_RADIUS_STEP, this.handleUpdateCircle)
+            ).executeIn = Ease.EXECUTE_IN_DRAW;
           } else if (item.action === ActionNames.SHIFT) {
             if (followModifier) {
               if (item.to.x === 0 && item.to.y < 0) {
@@ -51,7 +74,7 @@ export default class SceneOne extends Scene {
                   Tools.offsetWithStep(hero.position, hero.rotation, hero.step),
                   hero.step,
                   this.handleUpdateHeroMove
-                ));
+                )).executeIn = Ease.EXECUTE_IN_UPDATE;
               }
             } else {
               linearSumableTo.x += item.to.x;
@@ -72,10 +95,10 @@ export default class SceneOne extends Scene {
         { x: hero.position.x + linearSumableTo.x, y: hero.position.y + linearSumableTo.y },
         hero.step,
         this.handleUpdateHeroMove
-      ));
+      )).executeIn = Ease.EXECUTE_IN_UPDATE;
     }
 
-    Keeper.walk();
+    Keeper.walk(Ease.EXECUTE_IN_UPDATE);
 
     super.update();
   }
@@ -99,5 +122,7 @@ export default class SceneOne extends Scene {
         mouse
       );
     }
+
+    Keeper.walk(Ease.EXECUTE_IN_DRAW);
   }
 }
