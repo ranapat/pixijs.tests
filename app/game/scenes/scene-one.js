@@ -43,12 +43,14 @@ export default class SceneOne extends Scene {
             Keeper.add(new Linear(hero, item.to, hero.step, this.handleUpdateHeroMove));
           } else if (item.action === ActionNames.SHIFT) {
             if (followModifier) {
-              Keeper.add(new Linear(
-                hero,
-                Tools.offsetWithStep(hero.position, hero.rotation, hero.step),
-                hero.step,
-                this.handleUpdateHeroMove
-              ));
+              if (item.to.x === 0 && item.to.y < 0) {
+                Keeper.add(new Linear(
+                  hero,
+                  Tools.offsetWithStep(hero.position, hero.rotation, hero.step),
+                  hero.step,
+                  this.handleUpdateHeroMove
+                ));
+              }
             } else {
               linearSumableTo.x += item.to.x;
               linearSumableTo.y += item.to.y;
