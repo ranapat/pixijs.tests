@@ -43,4 +43,10 @@ export default class Tools {
 
     return { x, y };
   }
+
+  static randomInt(min, max) {
+    const minInt = Math.ceil(min);
+    const maxInt = Math.floor(max);
+    return Math.floor(Math.random() * (maxInt - minInt)) + minInt;
+  }
 }

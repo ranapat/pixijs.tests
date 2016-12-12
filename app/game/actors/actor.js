@@ -10,6 +10,11 @@ export default class Actor {
     this.x = undefined;
     this.y = undefined;
     this.rotation = undefined;
+    this.isMoving = false;
+  }
+
+  get clip() {
+    return undefined;
   }
 
   get angle() {
@@ -18,6 +23,14 @@ export default class Actor {
 
   get position() {
     return { x: this.x, y: this.y };
+  }
+
+  get moving() {
+    return this.isMoving;
+  }
+
+  set moving(value) {
+    this.isMoving = value;
   }
 
   apply(...args) {

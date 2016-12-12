@@ -7,7 +7,7 @@ import CommandNames from '../commands/command-names';
 import CommandModifiers from '../commands/command-modifiers';
 import ActorNames from '../actors/actor-names';
 
-const offset = ConfigHero.heroStep * 10;
+const OFFSET = ConfigHero.heroStep * 10;
 
 export default class ControllerKeyboard extends Controller {
   constructor(stack, window) {
@@ -30,10 +30,10 @@ export default class ControllerKeyboard extends Controller {
 
   getShift(keyCode) {
     switch (keyCode) {
-      case ConfigKeyboard.keyboardShiftUp: return { x: 0, y: -offset };
-      case ConfigKeyboard.keyboardShiftDown: return { x: 0, y: offset };
-      case ConfigKeyboard.keyboardShiftLeft: return { x: -offset, y: 0 };
-      case ConfigKeyboard.keyboardShiftRight: return { x: offset, y: 0 };
+      case ConfigKeyboard.keyboardShiftUp: return { x: 0, y: -OFFSET };
+      case ConfigKeyboard.keyboardShiftDown: return { x: 0, y: OFFSET };
+      case ConfigKeyboard.keyboardShiftLeft: return { x: -OFFSET, y: 0 };
+      case ConfigKeyboard.keyboardShiftRight: return { x: OFFSET, y: 0 };
       default: return undefined;
     }
   }

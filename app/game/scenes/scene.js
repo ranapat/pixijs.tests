@@ -21,11 +21,17 @@ export default class Scene {
       this.context.clear();
 
       let item;
+      let clip;
       const actors = this.actors;
 
       for (item of actors) {
         if (item.ready) {
-          this.context.draw(item.image, item.x, item.y, item.angle);
+          clip = item.clip;
+          if (clip !== undefined) {
+            this.context.clip(item.image, clip, item.x, item.y, item.angle);
+          } else {
+            this.context.draw(item.image, item.x, item.y, item.angle);
+          }
         }
       }
     }

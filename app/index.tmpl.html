@@ -4,8 +4,35 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title><%= htmlWebpackPlugin.options.title %></title>
+  <style>
+    body { background-color: black; }
+    #root { text-align: center; }
+    h1 { text-align: center; }
+    .legend { color: #efefef; }
+    .center { text-align: center; }
+    .left { float: left; }
+    .right { float: right }
+    .container { width: 100%; }
+    .subcontainer { width: 200px; margin: 0 auto;  }
+    .clear { clear: both; }
+  </style>
 </head>
 <body>
   <div id="root"></div>
+  <div class="legend">
+    <h1>legend:</h1>
+    <div class="center">W - up</div>
+    <div class="container">
+      <div class="subcontainer">
+        <div class="left">A - left</div><div class="right">D - right</div>
+        <div class="clear"></div>
+      </div>
+    </div>
+    <div class="center">S - down</div>
+    <br/>
+    <div class="center">SHIFT + W - follow the mouse</div>
+    <div class="center">mouse move - rotate</div>
+    <div class="center">right click - move to</div>
+  </div>
 </body>
 </html>

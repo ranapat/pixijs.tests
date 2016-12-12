@@ -29,6 +29,10 @@ export default class Ease {
   }
 
   poke() {
-    this.callback(this.next);
+    this.callback(this.next, false);
+  }
+
+  finish() {
+    this.callback(undefined, true);
   }
 }

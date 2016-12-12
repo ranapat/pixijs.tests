@@ -12,11 +12,15 @@ import Linear from '../easing/linear';
 import LinearSumable from '../easing/linear-sumable';
 import Simple from '../easing/simple';
 
+import Config from '../../config/config';
 import ConfigDestination from '../../config/config-destination';
 
 const TARGET_CIRCLE = 'circle';
 const CIRCLE_RADIUS = ConfigDestination.circleRadius;
 const CIRCLE_RADIUS_STEP = ConfigDestination.circleRadiusStep;
+
+const STAGE_WIDTH = Config.width;
+const STAGE_HEIGHT = Config.height;
 
 export default class SceneOne extends Scene {
   constructor(stack, context) {
@@ -33,8 +37,16 @@ export default class SceneOne extends Scene {
     this.handleUpdateCircle = this.handleUpdateCircle.bind(this);
   }
 
-  handleUpdateHeroMove(position) {
-    this.hero.apply(position.x, position.y);
+  handleUpdateHeroMove(position, ready) {
+    if (!ready) {
+      const x = Math.min(STAGE_WIDTH, Math.max(0, position.x));
+      const y = Math.min(STAGE_HEIGHT, Math.max(0, position.y));
+
+      this.hero.apply(x, y);
+      this.hero.moving = true;
+    } else {
+      this.hero.moving = false;
+    }
   }
 
   handleUpdateCircle(radius) {
@@ -64,7 +76,7 @@ export default class SceneOne extends Scene {
 
             this.destination = { x: item.to.x, y: item.to.y };
             Keeper.add(
-              new Simple(TARGET_CIRCLE, CIRCLE_RADIUS, 0, CIRCLE_RADIUS_STEP, this.handleUpdateCircle)
+              new Simple(TARGET_CIRCLE, 0, CIRCLE_RADIUS, CIRCLE_RADIUS_STEP, this.handleUpdateCircle)
             ).executeIn = Ease.EXECUTE_IN_DRAW;
           } else if (item.action === ActionNames.SHIFT) {
             if (followModifier) {

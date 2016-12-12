@@ -9,8 +9,8 @@ import Painter from './painters/painter';
 
 import SceneOne from './scenes/scene-one';
 
-const skipTicks = 1000 / Config.fps;
-const maxFrameSkip = Config.maxFrameSkip;
+const SKIP_TICKS = 1000 / Config.fps;
+const MAX_FRAME_SKIP = Config.maxFrameSkip;
 
 export default class Game {
   constructor(canvas, context) {
@@ -41,15 +41,15 @@ export default class Game {
     const now = Date.now();
     let loops = 0;
 
-    while (now > this.nextGameTick && loops < maxFrameSkip) {
+    while (now > this.nextGameTick && loops < MAX_FRAME_SKIP) {
       this.update();
 
-      this.nextGameTick += skipTicks;
+      this.nextGameTick += SKIP_TICKS;
       loops += 1;
     }
 
     if (loops === 0) {
-      this.draw(1 - ((this.nextGameTick - now) / skipTicks));
+      this.draw(1 - ((this.nextGameTick - now) / SKIP_TICKS));
     } else {
       this.draw(1);
     }

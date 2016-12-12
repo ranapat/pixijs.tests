@@ -39,6 +39,7 @@ export default class Keeper {
         if (!ease.ready) {
           ease.poke();
         } else {
+          ease.finish();
           queue.splice(i, 1);
 
           i -= 1;
