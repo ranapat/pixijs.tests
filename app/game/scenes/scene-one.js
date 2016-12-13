@@ -4,6 +4,8 @@ import Tools from '../easing/tools';
 import ActionNames from '../commands/command-names';
 import CommandModifiers from '../commands/command-modifiers';
 
+import ActorNames from '../actors/actor-names';
+import Explosion from '../actors/actor-explosion';
 import Hero from '../actors/actor-hero';
 
 import Ease from '../easing/ease';
@@ -11,6 +13,7 @@ import Keeper from '../easing/keeper';
 import Linear from '../easing/linear';
 import LinearSumable from '../easing/linear-sumable';
 import Simple from '../easing/simple';
+import Static from '../easing/static';
 
 import Config from '../../config/config';
 import ConfigDestination from '../../config/config-destination';
@@ -33,8 +36,11 @@ export default class SceneOne extends Scene {
     this.mouse = undefined;
     this.destination = undefined;
 
+    this.heroLinearSumable = { x: 0, y: 0 };
+
     this.handleUpdateHeroMove = this.handleUpdateHeroMove.bind(this);
     this.handleUpdateCircle = this.handleUpdateCircle.bind(this);
+    this.handleUpdateExplosion = this.handleUpdateExplosion.bind(this);
   }
 
   handleUpdateHeroMove(position, ready) {
@@ -55,56 +61,92 @@ export default class SceneOne extends Scene {
     }
   }
 
+  handleUpdateExplosion(explosion, complete) {
+    if (complete) {
+      const actors = this.actors;
+      const index = actors.indexOf(explosion);
+
+      if (index !== -1) {
+        actors.splice(index, 1);
+      }
+    }
+  }
+
+  handleHeroUpdate(item) {
+    const hero = this.hero;
+    const stack = this.stack;
+
+    const followModifier = stack.isModified(CommandModifiers.FOLLOW);
+    const heroLinearSumable = this.heroLinearSumable;
+
+    if (item.action === ActionNames.MOVE) {
+      Keeper.add(
+        new Linear(hero, item.to, hero.step, this.handleUpdateHeroMove)
+      ).executeIn = Ease.EXECUTE_IN_UPDATE;
+
+      this.destination = { x: item.to.x, y: item.to.y };
+      Keeper.add(
+        new Simple(TARGET_CIRCLE, 0, CIRCLE_RADIUS, CIRCLE_RADIUS_STEP, this.handleUpdateCircle)
+      ).executeIn = Ease.EXECUTE_IN_DRAW;
+    } else if (item.action === ActionNames.SHIFT) {
+      if (followModifier) {
+        if (item.to.x === 0 && item.to.y < 0) {
+          Keeper.add(new Linear(
+            hero,
+            Tools.offsetWithStep(hero.position, hero.rotation, hero.step),
+            hero.step,
+            this.handleUpdateHeroMove
+          )).executeIn = Ease.EXECUTE_IN_UPDATE;
+        }
+      } else {
+        heroLinearSumable.x += item.to.x;
+        heroLinearSumable.y += item.to.y;
+      }
+    } else if (item.action === ActionNames.TURN) {
+      hero.apply(hero.x, hero.y, Tools.angleBetweenPoints(hero.position, item.to));
+
+      this.mouse = { x: item.to.x, y: item.to.y };
+    }
+  }
+
+  handleExplosionUpdate(item) {
+    const explosion = new Explosion();
+
+    explosion.apply(item.to.x - (explosion.width / 2), item.to.y - (explosion.height / 2));
+    this.actors.push(explosion);
+
+    Keeper.add(new Static(
+      explosion,
+      this.handleUpdateExplosion
+    )).executeIn = Ease.EXECUTE_IN_UPDATE;
+  }
+
   update() {
     const hero = this.hero;
     const stack = this.stack;
+
+    const heroLinearSumable = this.heroLinearSumable;
+    heroLinearSumable.x = 0;
+    heroLinearSumable.y = 0;
+
     let item;
-
-    const followModifier = stack.isModified(CommandModifiers.FOLLOW);
-
-    const linearSumableTo = { x: 0, y: 0 };
 
     do {
       item = stack.get();
 
       if (item !== undefined) {
-        if (item.actor === hero.name) {
-          if (item.action === ActionNames.MOVE) {
-            Keeper.add(
-              new Linear(hero, item.to, hero.step, this.handleUpdateHeroMove)
-            ).executeIn = Ease.EXECUTE_IN_UPDATE;
-
-            this.destination = { x: item.to.x, y: item.to.y };
-            Keeper.add(
-              new Simple(TARGET_CIRCLE, 0, CIRCLE_RADIUS, CIRCLE_RADIUS_STEP, this.handleUpdateCircle)
-            ).executeIn = Ease.EXECUTE_IN_DRAW;
-          } else if (item.action === ActionNames.SHIFT) {
-            if (followModifier) {
-              if (item.to.x === 0 && item.to.y < 0) {
-                Keeper.add(new Linear(
-                  hero,
-                  Tools.offsetWithStep(hero.position, hero.rotation, hero.step),
-                  hero.step,
-                  this.handleUpdateHeroMove
-                )).executeIn = Ease.EXECUTE_IN_UPDATE;
-              }
-            } else {
-              linearSumableTo.x += item.to.x;
-              linearSumableTo.y += item.to.y;
-            }
-          } else if (item.action === ActionNames.TURN) {
-            hero.apply(hero.x, hero.y, Tools.angleBetweenPoints(hero.position, item.to));
-
-            this.mouse = { x: item.to.x, y: item.to.y };
-          }
+        switch (item.actor) {
+          case hero.name: this.handleHeroUpdate(item); break;
+          case ActorNames.EXPLOSION: this.handleExplosionUpdate(item); break;
+          default: console.log(`command not handled :: ${item.actor} .. ${item.action}`);
         }
       }
     } while (item !== undefined);
 
-    if (linearSumableTo.x !== 0 || linearSumableTo.y !== 0) {
+    if (heroLinearSumable.x !== 0 || heroLinearSumable.y !== 0) {
       Keeper.add(new LinearSumable(
         hero,
-        { x: hero.position.x + linearSumableTo.x, y: hero.position.y + linearSumableTo.y },
+        { x: hero.position.x + heroLinearSumable.x, y: hero.position.y + heroLinearSumable.y },
         hero.step,
         this.handleUpdateHeroMove
       )).executeIn = Ease.EXECUTE_IN_UPDATE;

@@ -34,6 +34,8 @@ export default class ControllerMouse extends Controller {
     if (this.started) {
       if (e.button > 0) {
         this.emit(CommandNames.MOVE, ActorNames.HERO, this.getPoint(e));
+      } else {
+        this.emit(CommandNames.EXPLOSION, ActorNames.EXPLOSION, this.getPoint(e));
       }
     }
   }
