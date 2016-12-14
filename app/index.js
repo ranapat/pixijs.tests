@@ -10,5 +10,4 @@ if (initialize.generate()) {
   const stage = new Stage(game);
 
   stage.start();
-  setTimeout(stage.stop, 1000 * 60);
 }

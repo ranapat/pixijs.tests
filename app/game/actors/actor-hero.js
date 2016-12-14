@@ -22,10 +22,14 @@ export default class ActorHero extends Actor {
     this.image = new Image();
     this.image.onload = this.handleOnLoad;
     this.image.onerror = this.handleOnError;
-    this.image.src = ConfigHero.asset;
+    this.image.src = this.asset;
 
     this.frame = undefined;
     this.skipFrames = undefined;
+  }
+
+  get asset() {
+    return ConfigHero.asset;
   }
 
   handleOnLoad() {

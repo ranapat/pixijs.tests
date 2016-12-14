@@ -8,6 +8,7 @@ import CommandModifiers from '../commands/command-modifiers';
 
 import ActorNames from '../actors/actor-names';
 import Hero from '../actors/actor-hero';
+import Robot from '../actors/actor-robot';
 import Rocket from '../actors/actor-rocket';
 import Explosion from '../actors/actor-explosion';
 
@@ -37,15 +38,25 @@ export default class SceneOne extends Scene {
     this.hero.apply(this.context.width / 2, this.context.height / 2, 90);
     this.actors.push(this.hero);
 
+    this.robot = new Robot();
+    this.robot.apply(STAGE_WIDTH - 50, STAGE_HEIGHT - 50, 270);
+    this.actors.push(this.robot);
+    this.triggerRobotRotate = false;
+
     this.mouse = undefined;
     this.destination = undefined;
 
     this.heroLinearSumable = { x: 0, y: 0 };
 
     this.handleHeroMove = this.handleHeroMove.bind(this);
+    this.handleRobotMove = this.handleRobotMove.bind(this);
     this.handleCircleRedraw = this.handleCircleRedraw.bind(this);
     this.handleRocketMove = this.handleRocketMove.bind(this);
     this.handleExplosionRedraw = this.handleExplosionRedraw.bind(this);
+
+    Keeper.add(
+      new Linear(this.robot, { x: this.robot.position.x, y: 50 }, this.robot.step, this.handleRobotMove)
+    ).executeIn = Ease.EXECUTE_IN_UPDATE;
   }
 
   handleHeroMove(position, ready) {
@@ -58,6 +69,27 @@ export default class SceneOne extends Scene {
     } else {
       this.hero.moving = false;
     }
+  }
+
+  handleRobotMove(position, ready) {
+    if (!ready) {
+      const x = Math.min(STAGE_WIDTH, Math.max(0, position.x));
+      const y = Math.min(STAGE_HEIGHT, Math.max(0, position.y));
+
+      this.robot.apply(x, y);
+      this.robot.moving = true;
+    } else {
+      this.robot.moving = false;
+
+      this.triggerRobotRotate = true;
+    }
+  }
+
+  rotateRobot() {
+    this.robot.apply(undefined, undefined, this.robot.rotation + 180);
+    Keeper.add(
+      new Linear(this.robot, { x: this.robot.position.x, y: this.robot.position.y === 50 ? STAGE_HEIGHT - 50 : 50 }, this.robot.step, this.handleRobotMove)
+    ).executeIn = Ease.EXECUTE_IN_UPDATE;
   }
 
   handleCircleRedraw(radius) {
@@ -201,6 +233,11 @@ export default class SceneOne extends Scene {
         hero.step,
         this.handleHeroMove
       )).executeIn = Ease.EXECUTE_IN_UPDATE;
+    }
+
+    if (this.triggerRobotRotate) {
+      this.triggerRobotRotate = false;
+      this.rotateRobot();
     }
 
     Keeper.walk(Ease.EXECUTE_IN_UPDATE);
