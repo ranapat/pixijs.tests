@@ -7,7 +7,7 @@ import CommandNames from '../commands/command-names';
 import CommandModifiers from '../commands/command-modifiers';
 import ActorNames from '../actors/actor-names';
 
-const OFFSET = ConfigHero.heroStep * 10;
+const OFFSET = ConfigHero.step * 10;
 
 export default class ControllerKeyboard extends Controller {
   constructor(stack, window) {

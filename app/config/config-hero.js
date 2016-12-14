@@ -1,5 +1,5 @@
 export default class ConfigHero {
-  static get heroStep() { return 5; }
+  static get step() { return 5; }
   static get skipFrames() { return 3; }
   static get gunTip() { return { x: -11, y: -30 }; }
   /* static get asset() { return '../../../shared/images/actors/hero.png'; } */

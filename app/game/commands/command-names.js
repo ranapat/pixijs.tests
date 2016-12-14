@@ -3,5 +3,6 @@ export default class CommandNames {
   static get SHIFT() { return 'shift'; }
   static get UNSHIFT() { return 'unshift'; }
   static get TURN() { return 'turn'; }
+  static get FIRE() { return 'fire'; }
   static get EXPLOSION() { return 'explosion'; }
 }

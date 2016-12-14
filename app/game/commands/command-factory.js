@@ -4,6 +4,7 @@ import CommandTurn from './command-turn';
 import CommandShift from './command-shift';
 import CommandUnshift from './command-unshift';
 import CommandMove from './command-move';
+import CommandFire from './command-fire';
 import CommandExplosion from './command-explosion';
 
 export default class CommandFactory {
@@ -23,6 +24,10 @@ export default class CommandFactory {
     return new CommandTurn(actor, to);
   }
 
+  static fire(actor, to) {
+    return new CommandFire(actor, to);
+  }
+
   static explosion(actor, to) {
     return new CommandExplosion(actor, to);
   }
@@ -33,6 +38,7 @@ export default class CommandFactory {
       case CommandNames.SHIFT: return CommandFactory.shift(...args);
       case CommandNames.UNSHIFT: return CommandFactory.unshift(...args);
       case CommandNames.MOVE: return CommandFactory.move(...args);
+      case CommandNames.FIRE: return CommandFactory.fire(...args);
       case CommandNames.EXPLOSION: return CommandFactory.explosion(...args);
       default: return null;
     }
