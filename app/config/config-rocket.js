@@ -1,6 +1,7 @@
 export default class ConfigRocket {
   static get skipFrames() { return 1; }
   static get step() { return 10; }
+  static get homingStep() { return 2; }
   static get fireOffset() { return 80; }
   static get width() { return 26; }
   static get height() { return 49; }

@@ -19,6 +19,7 @@ import LinearSumable from '../easing/linear-sumable';
 import LinearDynamic from '../easing/linear-dynamic';
 import Simple from '../easing/simple';
 import Static from '../easing/static';
+import Homing from '../easing/homing';
 
 import Config from '../../config/config';
 import ConfigDestination from '../../config/config-destination';
@@ -52,6 +53,7 @@ export default class SceneOne extends Scene {
     this.handleRobotMove = this.handleRobotMove.bind(this);
     this.handleCircleRedraw = this.handleCircleRedraw.bind(this);
     this.handleRocketMove = this.handleRocketMove.bind(this);
+    this.handleHomingRocketMove = this.handleHomingRocketMove.bind(this);
     this.handleExplosionRedraw = this.handleExplosionRedraw.bind(this);
 
     Keeper.add(
@@ -61,7 +63,7 @@ export default class SceneOne extends Scene {
 
   handleHeroMove(position, ready) {
     if (!ready) {
-      const x = Math.min(STAGE_WIDTH, Math.max(0, position.x));
+      const x = Math.min(STAGE_WIDTH - 200, Math.max(0, position.x));
       const y = Math.min(STAGE_HEIGHT, Math.max(0, position.y));
 
       this.hero.apply(x, y);
@@ -88,7 +90,12 @@ export default class SceneOne extends Scene {
   rotateRobot() {
     this.robot.apply(undefined, undefined, this.robot.rotation + 180);
     Keeper.add(
-      new Linear(this.robot, { x: this.robot.position.x, y: this.robot.position.y === 50 ? STAGE_HEIGHT - 50 : 50 }, this.robot.step, this.handleRobotMove)
+      new Linear(
+        this.robot,
+        { x: this.robot.position.x, y: this.robot.position.y === 50 ? STAGE_HEIGHT - 50 : 50 },
+        this.robot.step,
+        this.handleRobotMove
+      )
     ).executeIn = Ease.EXECUTE_IN_UPDATE;
   }
 
@@ -111,6 +118,14 @@ export default class SceneOne extends Scene {
       stack.add(CommandFactory.get(CommandNames.EXPLOSION, ActorNames.EXPLOSION, position));
     } else {
       rocket.apply(position.x, position.y);
+    }
+  }
+
+  handleHomingRocketMove(rocket, position, angle, complete) {
+    if (complete) {
+      this.handleRocketMove(rocket, position, complete);
+    } else {
+      rocket.apply(position.x, position.y, angle + rocket.fireAngle);
     }
   }
 
@@ -166,6 +181,10 @@ export default class SceneOne extends Scene {
     if (item.action === CommandNames.FIRE) {
       const rocket = new Rocket();
       const hero = this.hero;
+      const robot = this.robot;
+
+      const stack = this.stack;
+      const homingRocketModifier = stack.isModified(CommandModifiers.HOMING_ROCKET);
 
       const gunTip = Tools.sumPoints(
         hero.position,
@@ -182,12 +201,21 @@ export default class SceneOne extends Scene {
       );
       this.actors.push(rocket);
 
-      Keeper.add(new LinearDynamic(
-        rocket,
-        item.to,
-        rocket.step,
-        this.handleRocketMove
-      )).executeIn = Ease.EXECUTE_IN_UPDATE;
+      if (!homingRocketModifier) {
+        Keeper.add(new LinearDynamic(
+          rocket,
+          item.to,
+          rocket.step,
+          this.handleRocketMove
+        )).executeIn = Ease.EXECUTE_IN_UPDATE;
+      } else {
+        Keeper.add(new Homing(
+          rocket,
+          robot,
+          rocket.homingStep,
+          this.handleHomingRocketMove
+        )).executeIn = Ease.EXECUTE_IN_UPDATE;
+      }
     }
   }
 

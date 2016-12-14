@@ -21,6 +21,7 @@ export default class ControllerKeyboard extends Controller {
     this.shiftDown = false;
 
     this.steerModifier = false;
+    this.homingRocketModifier = false;
 
     this.handleKeyUp = this.handleKeyUp.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
@@ -63,6 +64,12 @@ export default class ControllerKeyboard extends Controller {
 
         this.unmodify(CommandModifiers.FOLLOW);
       }
+
+      if (e.keyCode === ConfigKeyboard.keyboardHomingRocket && this.homingRocketModifier) {
+        this.homingRocketModifier = false;
+
+        this.unmodify(CommandModifiers.HOMING_ROCKET);
+      }
     }
   }
 
@@ -76,6 +83,12 @@ export default class ControllerKeyboard extends Controller {
         this.steerModifier = true;
 
         this.modify(CommandModifiers.FOLLOW);
+      }
+
+      if (e.keyCode === ConfigKeyboard.keyboardHomingRocket && !this.homingRocketModifier) {
+        this.homingRocketModifier = true;
+
+        this.modify(CommandModifiers.HOMING_ROCKET);
       }
     }
   }

@@ -4,4 +4,5 @@ export default class ConfigKeyboard {
   static get keyboardShiftLeft() { return 65; }
   static get keyboardShiftRight() { return 68; }
   static get keyboardSteer() { return 16; }
+  static get keyboardHomingRocket() { return 32; }
 }

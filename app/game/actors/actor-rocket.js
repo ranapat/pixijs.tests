@@ -4,6 +4,7 @@ import ActorNames from './actor-names';
 import ConfigRocket from '../../config/config-rocket';
 
 const STEP = ConfigRocket.step;
+const HOMING_STEP = ConfigRocket.homingStep;
 const FIRE_OFFSET = ConfigRocket.fireOffset;
 const SKIP_FRAMES = ConfigRocket.skipFrames;
 const REGIONS = ConfigRocket.regions;
@@ -60,6 +61,10 @@ export default class ActorRocket extends Actor {
 
   get step() {
     return STEP;
+  }
+
+  get homingStep() {
+    return HOMING_STEP;
   }
 
   get clip() {
