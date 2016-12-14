@@ -1,9 +1,5 @@
 export default class Scene {
   constructor(stack, context) {
-    if (new.target === Scene) {
-      throw new TypeError('Cannot construct Scene directly');
-    }
-
     this.stack = stack;
     this.context = context;
 

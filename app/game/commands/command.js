@@ -1,9 +1,5 @@
 export default class Command {
   constructor(actor, action, to) {
-    if (new.target === Command) {
-      throw new TypeError('Cannot construct Command directly');
-    }
-
     this.actor = actor;
     this.action = action;
     this.to = to;

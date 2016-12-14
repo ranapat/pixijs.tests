@@ -1,9 +1,5 @@
 export default class Actor {
   constructor(name) {
-    if (new.target === Actor) {
-      throw new TypeError('Cannot construct Actor directly');
-    }
-
     this.name = name;
     this.image = undefined;
     this.ready = false;
