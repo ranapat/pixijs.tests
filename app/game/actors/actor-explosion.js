@@ -1,3 +1,5 @@
+import * as PIXI from 'pixi.js';
+
 import Actor from './actor';
 import ActorNames from './actor-names';
 
@@ -12,36 +14,45 @@ export default class ActorExplosion extends Actor {
   constructor() {
     super(ActorNames.EXPLOSION);
 
-    this.ready = false;
+    this.texture = PIXI.loader.resources[this.asset].texture;
+    this.hero = new PIXI.Sprite(this.texture);
 
-    this.handleOnLoad = this.handleOnLoad.bind(this);
-    this.handleOnError = this.handleOnError.bind(this);
-
-    this.image = new Image();
-    this.image.onload = this.handleOnLoad;
-    this.image.onerror = this.handleOnError;
-    this.image.src = ConfigExplosion.asset;
+    this.applyInternals();
 
     this.frame = undefined;
     this.skipFrames = undefined;
   }
 
-  handleOnLoad() {
-    this.ready = true;
+  hop() {
+    this.applyInternals();
   }
 
-  handleOnError() {
-    console.log('Explosion asset cannot be loaded.');
+  applyInternals() {
+    this.texture.frame = this.clip;
+  }
+
+  get asset() {
+    return ConfigExplosion.asset;
+  }
+
+  get sprite() {
+    return this.hero;
   }
 
   apply(x, y) {
+    const position = this.hero.position;
+
     if (x !== undefined) {
+      position.x = x;
       this.x = x;
     }
 
     if (y !== undefined) {
+      position.y = y;
       this.y = y;
     }
+
+    this.applyInternals();
   }
 
   get clip() {

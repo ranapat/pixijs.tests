@@ -5,7 +5,7 @@ export default class ConfigRocket {
   static get fireOffset() { return 80; }
   static get width() { return 26; }
   static get height() { return 49; }
-  static get asset() { return '../../../shared/images/actors/rocket.png'; }
+  static get asset() { return '../../shared/images/actors/rocket.png'; }
   static get regions() {
     const result = [];
     let i;

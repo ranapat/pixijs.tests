@@ -2,8 +2,6 @@ export default class Scene {
   constructor(stack, context) {
     this.stack = stack;
     this.context = context;
-
-    this.actors = [];
   }
 
   update() {

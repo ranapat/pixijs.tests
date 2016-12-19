@@ -9,7 +9,7 @@ export default class Homing extends Ease {
     this.step = step;
     this.initialDestination = Tools.offsetWithStep(
       this.target.position,
-      this.target.angle - this.target.fireAngle,
+      ((this.target.rotation - this.target.fireAngle) * 180) / Math.PI,
       200
     );
     this.stepsBeforHoming = 50;

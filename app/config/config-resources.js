@@ -1,12 +1,14 @@
 import ConfigHero from './config-hero';
 import ConfigRobot from './config-robot';
+import ConfigRocket from './config-rocket';
+import ConfigExplosion from './config-explosion';
 
 export default class ConfigResources {
   static get requiredResources() {
     return [
-      '../../shared/images/actors/explosion.png',
+      ConfigExplosion.asset,
       ConfigRobot.asset,
-      '../../shared/images/actors/rocket.png',
+      ConfigRocket.asset,
       ConfigHero.asset,
     ];
   }

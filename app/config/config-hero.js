@@ -1,7 +1,7 @@
 export default class ConfigHero {
   static get step() { return 5; }
   static get skipFrames() { return 3; }
-  static get gunTip() { return { x: -11, y: -30 }; }
+  static get gunTip() { return { x: 25, y: -16 }; }
   static get asset() { return '../../shared/images/actors/sniper.png'; }
   static get regions() {
     return {

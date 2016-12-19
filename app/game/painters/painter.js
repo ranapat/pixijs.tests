@@ -1,3 +1,5 @@
+import * as PIXI from 'pixi.js';
+
 /*
 import ConfigDestination from '../../config/config-destination';
 
@@ -8,6 +10,9 @@ export default class Painter {
   constructor(renderer, stage) {
     this.renderer = renderer;
     this.stage = stage;
+
+    this.line = undefined;
+    this.circle = undefined;
   }
 
   get width() {
@@ -26,38 +31,37 @@ export default class Painter {
     this.renderer.render(this.stage);
   }
 
-  tracer(/* from, to */) {
-    /*
-    const context = this.context;
+  tracer(from, to) {
+    if (this.line !== undefined) {
+      this.line.parent.removeChild(this.line);
+    }
+    const graphics = new PIXI.Graphics();
 
-    const gradient = context.createLinearGradient(from.x, from.y, to.x, to.y);
-    gradient.addColorStop(0, 'rgba(255, 0, 0, 1.0)');
-    gradient.addColorStop(1, 'rgba(255, 0, 0, 0.0)');
+    graphics.lineStyle(1, 0xFF0000);
 
-    context.beginPath();
+    graphics.moveTo(from.x, from.y);
+    graphics.lineTo(to.x, to.y);
 
-    context.moveTo(from.x, from.y);
-    context.lineTo(to.x, to.y);
+    graphics.endFill();
 
-    context.lineWidth = 1;
-    context.strokeStyle = gradient;
+    this.stage.addChild(graphics);
 
-    context.stroke();
-    */
+    this.line = graphics;
   }
 
-  destination(/* position, radius */) {
-    /*
-    const context = this.context;
-    const alpha = 1 - (radius / CIRCLE_RADIUS);
+  destination(position, radius) {
+    if (this.circle !== undefined) {
+      this.circle.parent.removeChild(this.circle);
+    }
 
-    context.beginPath();
+    const graphics = new PIXI.Graphics();
 
-    context.arc(position.x, position.y, radius, 0, 2 * Math.PI, false);
-    context.lineWidth = 1;
-    context.strokeStyle = `rgba(255, 0, 0, ${alpha})`;
+    graphics.lineStyle(1, 0xFF0000);
+    graphics.drawCircle(position.x, position.y, radius);
+    graphics.endFill();
 
-    context.stroke();
-    */
+    this.stage.addChild(graphics);
+
+    this.circle = graphics;
   }
 }

@@ -1,3 +1,5 @@
+import * as PIXI from 'pixi.js';
+
 import Actor from './actor';
 import ActorNames from './actor-names';
 
@@ -15,48 +17,52 @@ export default class ActorRocket extends Actor {
   constructor() {
     super(ActorNames.ROCKET);
 
-    this.ready = false;
+    this.texture = PIXI.loader.resources[this.asset].texture;
+    this.hero = new PIXI.Sprite(this.texture);
+    this.hero.anchor.x = 0.5;
+    this.hero.anchor.y = 0.5;
 
-    this.handleOnLoad = this.handleOnLoad.bind(this);
-    this.handleOnError = this.handleOnError.bind(this);
-
-    this.image = new Image();
-    this.image.onload = this.handleOnLoad;
-    this.image.onerror = this.handleOnError;
-    this.image.src = ConfigRocket.asset;
+    this.applyInternals();
 
     this.frame = undefined;
     this.skipFrames = undefined;
   }
 
-  handleOnLoad() {
-    this.ready = true;
+  applyInternals() {
+    this.texture.frame = this.clip;
   }
 
-  handleOnError() {
-    console.log('Rocket asset cannot be loaded.');
+  get asset() {
+    return ConfigRocket.asset;
+  }
+
+  get sprite() {
+    return this.hero;
   }
 
   apply(x, y, rotation) {
+    const position = this.hero.position;
+
     if (x !== undefined) {
+      position.x = x;
       this.x = x;
     }
 
     if (y !== undefined) {
+      position.y = y;
       this.y = y;
     }
 
     if (rotation !== undefined) {
+      this.hero.rotation = rotation;
       this.rotation = rotation;
     }
-  }
 
-  get angle() {
-    return this.rotation + 10;
+    this.applyInternals();
   }
 
   get fireAngle() {
-    return FIRE_OFFSET;
+    return FIRE_OFFSET * (Math.PI / 180);
   }
 
   get step() {

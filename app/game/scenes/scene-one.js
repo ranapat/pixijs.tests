@@ -108,12 +108,10 @@ export default class SceneOne extends Scene {
   handleRocketMove(rocket, position, complete) {
     if (complete) {
       const stack = this.stack;
-      const actors = this.actors;
-      const index = actors.indexOf(rocket);
 
-      if (index !== -1) {
-        actors.splice(index, 1);
-      }
+      const sprite = rocket.sprite;
+      sprite.visible = false;
+      sprite.parent.removeChild(sprite);
 
       stack.add(CommandFactory.get(CommandNames.EXPLOSION, ActorNames.EXPLOSION, position));
     } else {
@@ -131,12 +129,11 @@ export default class SceneOne extends Scene {
 
   handleExplosionRedraw(explosion, complete) {
     if (complete) {
-      const actors = this.actors;
-      const index = actors.indexOf(explosion);
-
-      if (index !== -1) {
-        actors.splice(index, 1);
-      }
+      const sprite = explosion.sprite;
+      sprite.visible = false;
+      sprite.parent.removeChild(sprite);
+    } else {
+      explosion.hop();
     }
   }
 
@@ -199,7 +196,7 @@ export default class SceneOne extends Scene {
         gunTip.y,
         Tools.angleBetweenPoints(hero.position, item.to) + rocket.fireAngle
       );
-      this.actors.push(rocket);
+      this.context.addChild(rocket.sprite);
 
       if (!homingRocketModifier) {
         Keeper.add(new LinearDynamic(
@@ -223,7 +220,7 @@ export default class SceneOne extends Scene {
     const explosion = new Explosion();
 
     explosion.apply(item.to.x - (explosion.width / 2), item.to.y - (explosion.height / 2));
-    this.actors.push(explosion);
+    this.context.addChild(explosion.sprite);
 
     Keeper.add(new Static(
       explosion,

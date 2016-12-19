@@ -2,7 +2,7 @@ export default class ConfigExplosion {
   static get skipFrames() { return 1; }
   static get width() { return 128; }
   static get height() { return 128; }
-  static get asset() { return '../../../shared/images/actors/explosion.png'; }
+  static get asset() { return '../../shared/images/actors/explosion.png'; }
   static get regions() {
     const result = [];
     let i;
