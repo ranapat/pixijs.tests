@@ -2,7 +2,6 @@ export default class Actor {
   constructor(name) {
     this.name = name;
     this.image = undefined;
-    this.ready = false;
     this.x = undefined;
     this.y = undefined;
     this.rotation = undefined;
@@ -11,10 +10,6 @@ export default class Actor {
 
   get clip() {
     return undefined;
-  }
-
-  get angle() {
-    return this.rotation;
   }
 
   get position() {
@@ -27,6 +22,10 @@ export default class Actor {
 
   set moving(value) {
     this.isMoving = value;
+  }
+
+  get sprite() {
+    return undefined;
   }
 
   apply(...args) {

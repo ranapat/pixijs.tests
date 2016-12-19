@@ -36,12 +36,12 @@ export default class SceneOne extends Scene {
     super(stack, context);
 
     this.hero = new Hero();
-    this.hero.apply(this.context.width / 2, this.context.height / 2, 90);
-    this.actors.push(this.hero);
+    this.hero.apply(this.context.width / 2, this.context.height / 2);
+    this.context.addChild(this.hero.sprite);
 
     this.robot = new Robot();
-    this.robot.apply(STAGE_WIDTH - 50, STAGE_HEIGHT - 50, 270);
-    this.actors.push(this.robot);
+    this.robot.apply(STAGE_WIDTH - 50, STAGE_HEIGHT - 50, 270, 0);
+    this.context.addChild(this.robot.sprite);
     this.triggerRobotRotate = false;
 
     this.mouse = undefined;
@@ -88,7 +88,7 @@ export default class SceneOne extends Scene {
   }
 
   rotateRobot() {
-    this.robot.apply(undefined, undefined, this.robot.rotation + 180);
+    this.robot.apply(undefined, undefined, this.robot.rotation === 3 ? 0 : 3);
     Keeper.add(
       new Linear(
         this.robot,
@@ -190,7 +190,7 @@ export default class SceneOne extends Scene {
         hero.position,
         Tools.rotatePoint(
           hero.gunTip,
-          hero.angle
+          hero.rotation
         )
       );
 
@@ -285,7 +285,7 @@ export default class SceneOne extends Scene {
         Tools.sumPoints(
           Tools.rotatePoint(
             hero.gunTip,
-            hero.angle
+            hero.rotation
           ),
           position
         ),

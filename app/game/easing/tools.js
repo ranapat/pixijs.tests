@@ -1,9 +1,8 @@
-const TO_DEGREES = 180 / Math.PI;
 const TO_RADIANS = Math.PI / 180;
 
 export default class Tools {
   static angleBetweenPoints(a, b) {
-    return Math.atan2(b.y - a.y, b.x - a.x) * TO_DEGREES;
+    return Math.atan2(b.y - a.y, b.x - a.x);
   }
 
   static rotatePoint(point, angle) {

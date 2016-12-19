@@ -1,8 +1,11 @@
+import * as PIXI from 'pixi.js';
+
 import Actor from './actor';
 import ActorNames from './actor-names';
 
 import ConfigHero from '../../config/config-hero';
 
+const ROTATION_SHIFT = (80 * Math.PI) / 180;
 const STEP = ConfigHero.step;
 const SKIP_FRAMES = ConfigHero.skipFrames;
 const REGIONS = ConfigHero.regions;
@@ -14,48 +17,48 @@ export default class ActorHero extends Actor {
   constructor() {
     super(ActorNames.HERO);
 
-    this.ready = false;
+    this.texture = PIXI.loader.resources[this.asset].texture;
+    this.hero = new PIXI.Sprite(this.texture);
+    this.hero.anchor.x = 0.5;
+    this.hero.anchor.y = 0.5;
 
-    this.handleOnLoad = this.handleOnLoad.bind(this);
-    this.handleOnError = this.handleOnError.bind(this);
-
-    this.image = new Image();
-    this.image.onload = this.handleOnLoad;
-    this.image.onerror = this.handleOnError;
-    this.image.src = this.asset;
+    this.applyInternals();
 
     this.frame = undefined;
     this.skipFrames = undefined;
+  }
+
+  get sprite() {
+    return this.hero;
   }
 
   get asset() {
     return ConfigHero.asset;
   }
 
-  handleOnLoad() {
-    this.ready = true;
-  }
-
-  handleOnError() {
-    console.log('Hero asset cannot be loaded.');
-  }
-
   apply(x, y, rotation) {
+    const position = this.hero.position;
+
     if (x !== undefined) {
+      position.x = x;
       this.x = x;
     }
 
     if (y !== undefined) {
+      position.y = y;
       this.y = y;
     }
 
     if (rotation !== undefined) {
+      this.hero.rotation = rotation + this.rotationShift;
       this.rotation = rotation;
     }
+
+    this.applyInternals();
   }
 
-  get angle() {
-    return this.rotation + 80;
+  get rotationShift() {
+    return ROTATION_SHIFT;
   }
 
   get step() {
@@ -64,6 +67,10 @@ export default class ActorHero extends Actor {
 
   get gunTip() {
     return GUN_TIP;
+  }
+
+  applyInternals() {
+    this.texture.frame = this.clip;
   }
 
   get clip() {
@@ -105,6 +112,9 @@ export default class ActorHero extends Actor {
 
       this.frame = 0;
       this.skipFrames = 0;
+
+      this.applyInternals();
     }
   }
+
 }

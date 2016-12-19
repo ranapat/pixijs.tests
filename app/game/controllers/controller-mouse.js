@@ -4,48 +4,47 @@ import CommandNames from '../commands/command-names';
 import ActorNames from '../actors/actor-names';
 
 export default class ControllerMouse extends Controller {
-  constructor(stack, canvas) {
+  constructor(stack, renderer, stage) {
     super(stack);
 
-    this.canvas = canvas;
-    this.rectangle = undefined;
+    this.renderer = renderer;
+    this.stage = stage;
 
     this.handleMouseMove = this.handleMouseMove.bind(this);
     this.handleMouseDown = this.handleMouseDown.bind(this);
+    this.handleOnContextMenu = this.handleOnContextMenu.bind(this);
 
-    this.initializeRectangle();
+    this.renderer.view.addEventListener('contextmenu', this.handleOnContextMenu, false);
+
     this.initializeEvents();
   }
 
-  getPoint(e) {
-    return {
-      x: e.clientX - this.rectangle.left,
-      y: e.clientY - this.rectangle.top,
-    };
+  handleOnContextMenu() {
+    this.emit(CommandNames.MOVE, ActorNames.HERO, this.getPoint());
   }
 
-  handleMouseMove(e) {
+  getPoint() {
+    const global = this.renderer.plugins.interaction.mouse.global;
+    const x = global.x;
+    const y = global.y;
+
+    return { x, y };
+  }
+
+  handleMouseMove() {
     if (this.started) {
-      this.emit(CommandNames.TURN, ActorNames.HERO, this.getPoint(e));
+      this.emit(CommandNames.TURN, ActorNames.HERO, this.getPoint());
     }
   }
 
-  handleMouseDown(e) {
+  handleMouseDown() {
     if (this.started) {
-      if (e.button > 0) {
-        this.emit(CommandNames.MOVE, ActorNames.HERO, this.getPoint(e));
-      } else {
-        this.emit(CommandNames.FIRE, ActorNames.ROCKET, this.getPoint(e));
-      }
+      this.emit(CommandNames.FIRE, ActorNames.ROCKET, this.getPoint());
     }
-  }
-
-  initializeRectangle() {
-    this.rectangle = this.canvas.getBoundingClientRect();
   }
 
   initializeEvents() {
-    this.canvas.addEventListener('mousemove', this.handleMouseMove, false);
-    this.canvas.addEventListener('mousedown', this.handleMouseDown, false);
+    this.stage.on('mousemove', this.handleMouseMove);
+    this.stage.on('mousedown', this.handleMouseDown);
   }
 }

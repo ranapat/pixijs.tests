@@ -1,67 +1,44 @@
+import * as PIXI from 'pixi.js';
+
 import Config from '../config/config';
+import ConfigResources from '../config/config-resources';
 
 export default class Initialize {
-  constructor(_document) {
+  constructor(_document, callback) {
     this.document = _document;
     this.container = document.getElementById('root');
-    this.canvas = undefined;
-    this.context = undefined;
+    this.callback = callback;
+
+    this.renderer = undefined;
+    this.stage = undefined;
+
+    this.handleRequiredResourcesComplete = this.handleRequiredResourcesComplete.bind(this);
+
+    this.generate();
   }
 
-  generateError(message) {
-    try {
-      const element = document.createElement('div');
-      element.innerHTML = `error is ${message}`;
-      this.container.appendChild(element);
-    } catch (e) { /**/ }
-  }
+  generate() {
+    this.renderer = PIXI.autoDetectRenderer(Config.width, Config.height);
+    this.container.appendChild(this.renderer.view);
+    this.preventContextMenu();
 
-  generate2dContext() {
-    let success;
+    this.stage = new PIXI.Container();
+    this.stage.hitArea = new PIXI.Rectangle(0, 0, Config.width, Config.height);
+    this.stage.interactive = true;
+    this.stage.buttonMode = true;
 
-    try {
-      this.canvas = document.createElement('canvas');
-      this.container = this.container.appendChild(this.canvas);
-
-      this.context = this.canvas.getContext('2d');
-
-      success = true;
-    } catch (e) {
-      this.generateError(e.message);
-    }
-
-    return success;
-  }
-
-  adjustSize() {
-    this.canvas.width = Config.width;
-    this.canvas.height = Config.height;
-
-    this.context.width = Config.width;
-    this.context.height = Config.height;
+    PIXI.loader.add(ConfigResources.requiredResources).load(this.handleRequiredResourcesComplete);
   }
 
   preventContextMenu() {
-    this.canvas.addEventListener('contextmenu', this.handleOnContextMenu, false);
-  }
-
-  cleanContext() {
-    this.context.fillRect(0, 0, this.context.width, this.context.height);
+    this.renderer.view.addEventListener('contextmenu', this.handleOnContextMenu, false);
   }
 
   handleOnContextMenu(e) {
     e.preventDefault();
   }
 
-  generate() {
-    const success = this.generate2dContext();
-
-    if (success === true) {
-      this.adjustSize();
-      this.preventContextMenu();
-      this.cleanContext();
-    }
-
-    return success;
+  handleRequiredResourcesComplete() {
+    this.callback();
   }
 }

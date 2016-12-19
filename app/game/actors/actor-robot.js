@@ -16,8 +16,8 @@ export default class ActorRobot extends ActorHero {
     return ConfigRobot.asset;
   }
 
-  handleOnError() {
-    console.log('Robot asset cannot be loaded.');
+  get rotationShift() {
+    return 0;
   }
 
   get step() {

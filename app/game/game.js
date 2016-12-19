@@ -13,14 +13,14 @@ const SKIP_TICKS = 1000 / Config.fps;
 const MAX_FRAME_SKIP = Config.maxFrameSkip;
 
 export default class Game {
-  constructor(canvas, context) {
-    this.canvas = canvas;
-    this.context = context;
+  constructor(renderer, stage) {
+    this.renderer = renderer;
+    this.stage = stage;
 
     this.stack = new CommandStack();
-    this.mouse = new ControllerMouse(this.stack, this.canvas);
+    this.mouse = new ControllerMouse(this.stack, this.renderer, this.stage);
     this.keyboard = new ControllerKeyboard(this.stack, window);
-    this.painter = new Painter(this.context);
+    this.painter = new Painter(this.renderer, this.stage);
     this.scene = new SceneOne(this.stack, this.painter);
 
     this.nextGameTick = Date.now();
