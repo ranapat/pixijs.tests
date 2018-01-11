@@ -1,3 +1,11 @@
+# Custom Game Pixi.js
+
+Simple Game in es6 with pixi.js
+
+## Example life-cycle with pixi.js drawing and custom animation loops.
+
+## This is an example - use just for fun.
+
 #### `npm run open-dev`
 The same as npm run dev, but opens the browser
 

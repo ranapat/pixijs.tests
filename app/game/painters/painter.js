@@ -1,11 +1,5 @@
 import * as PIXI from 'pixi.js';
 
-/*
-import ConfigDestination from '../../config/config-destination';
-
-const CIRCLE_RADIUS = ConfigDestination.circleRadius;
-*/
-
 export default class Painter {
   constructor(renderer, stage) {
     this.renderer = renderer;
@@ -35,6 +29,7 @@ export default class Painter {
     if (this.line !== undefined) {
       this.line.parent.removeChild(this.line);
     }
+
     const graphics = new PIXI.Graphics();
 
     graphics.lineStyle(1, 0xFF0000);
